@@ -18,6 +18,7 @@ class OclOpenmrsHelper(object):
     SOURCE_DIRECTORY = [
         {'owner_type':'org', 'owner_id':'IHTSDO', 'omrs_id':'SNOMED CT', 'ocl_id':'SNOMED-CT'},
         {'owner_type':'org', 'owner_id':'IHTSDO', 'omrs_id':'SNOMED NP', 'ocl_id':'SNOMED-NP'},
+	
         {'owner_type':'org', 'owner_id':'WHO', 'omrs_id':'ICD-10-WHO', 'ocl_id':'ICD-10-WHO'},
         {'owner_type':'org', 'owner_id':'NLM', 'omrs_id':'RxNORM', 'ocl_id':'RxNORM'},
         {'owner_type':'org', 'owner_id':'NLM', 'omrs_id':'RxNORM Comb', 'ocl_id':'RxNORM-Comb'},
@@ -31,6 +32,7 @@ class OclOpenmrsHelper(object):
         {'owner_type':'org', 'owner_id':'AMPATH', 'omrs_id':'AMPATH', 'ocl_id':'AMPATH'},
         {'owner_type':'org', 'owner_id':'CIEL', 'omrs_id':'SNOMED MVP', 'ocl_id':'SNOMED-MVP'},
         {'owner_type':'org', 'owner_id':'OpenMRS', 'omrs_id':'org.openmrs.module.mdrtb', 'ocl_id':'org.openmrs.module.mdrtb'},
+	{'owner_type':'org', 'owner_id':'OpenMRS', 'omrs_id':'org.openmrs.module.bacteriology', 'ocl_id':'org.openmrs.module.bacteriology'},
         {'owner_type':'org', 'owner_id':'MVP', 'omrs_id':'MVP Amazon Server 174', 'ocl_id':'MVP-Amazon-Server-174'},
         {'owner_type':'org', 'owner_id':'IHTSDO', 'omrs_id':'SNOMED US', 'ocl_id':'SNOMED-US'},
         {'owner_type':'org', 'owner_id':'HL7', 'omrs_id':'HL7 2.x Route of Administration', 'ocl_id':'HL7-2.x-Route-of-Administration'},
