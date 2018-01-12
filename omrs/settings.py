@@ -44,11 +44,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         #'NAME': 'openmrs_20150824',
-        'NAME': 'openmrs_20150514',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3307',
+        'NAME': 'openmrs',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
+        'HOST': '192.168.33.10',
+        'PORT': '3306',
     }
 }
 
@@ -56,5 +56,5 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
+USE_TZ = False
 STATIC_URL = '/static/'
