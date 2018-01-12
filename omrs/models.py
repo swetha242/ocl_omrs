@@ -15,22 +15,22 @@ from django.db import models
 class Concept(models.Model):
     concept_id = models.IntegerField(primary_key=True)
     retired = models.BooleanField()
-    short_name = models.CharField(max_length=255, blank=True)
-    description = models.TextField(blank=True)
-    form_text = models.TextField(blank=True)
+    short_name = models.CharField(max_length=255, blank=True,null=True)
+    description = models.TextField(blank=True,null=True)
+    form_text = models.TextField(blank=True,null=True)
 #    datatype_id = models.IntegerField()
     datatype = models.ForeignKey('ConceptDatatype')
 #    class_id = models.IntegerField()
     concept_class = models.ForeignKey('ConceptClass', db_column='class_id')
-    is_set = models.IntegerField()
-    creator = models.IntegerField()
-    date_created = models.DateTimeField()
-    version = models.CharField(max_length=50, blank=True)
+    is_set = models.IntegerField(blank=True,default=0)
+    creator = models.IntegerField(blank=True,default=1)
+    date_created = models.DateTimeField(blank=True,default='2014-07-15 02:40:21')
+    version = models.CharField(max_length=50, blank=True,default='')
     changed_by = models.IntegerField(blank=True, null=True)
-    date_changed = models.DateTimeField(blank=True, null=True)
+    date_changed = models.DateTimeField(blank=True, default='2014-07-15 02:40:21')
     retired_by = models.IntegerField(blank=True, null=True)
     date_retired = models.DateTimeField(blank=True, null=True)
-    retire_reason = models.CharField(max_length=255, blank=True)
+    retire_reason = models.CharField(max_length=255, blank=True,null=True)
     uuid = models.CharField(unique=True, max_length=38)
 
     def __unicode__(self):
@@ -57,8 +57,8 @@ class ConceptAnswer(models.Model):
         db_column='answer_concept', related_name='answer')
 
     answer_drug = models.IntegerField(blank=True, null=True)
-    creator = models.IntegerField()
-    date_created = models.DateTimeField()
+    creator = models.IntegerField(blank=True, default=1)
+    date_created = models.DateTimeField(blank=True,default='2009-06-23 21:49:09')
     uuid = models.CharField(unique=True, max_length=38)
     sort_weight = models.FloatField(blank=True, null=True)
     class Meta:
@@ -69,13 +69,16 @@ class ConceptClass(models.Model):
     concept_class_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    creator = models.IntegerField()
-    date_created = models.DateTimeField()
+    creator = models.IntegerField(blank=True,default=0)
+    date_created = models.DateTimeField(blank=True,default='2014-02-07 22:16:02')
     retired = models.IntegerField()
     retired_by = models.IntegerField(blank=True, null=True)
     date_retired = models.DateTimeField(blank=True, null=True)
     retire_reason = models.CharField(max_length=255, blank=True)
     uuid = models.CharField(unique=True, max_length=38)
+    #Below two columns not in refapp
+    date_changed = models.DateTimeField(blank=True, null=True)
+    changed_by = models.IntegerField(blank=True, null=True)
 
     def __unicode__(self):
         return self.name
@@ -161,17 +164,17 @@ class ConceptName(models.Model):
     concept = models.ForeignKey('Concept')
     name = models.CharField(max_length=255)
     locale = models.CharField(max_length=50)
-    creator = models.IntegerField()
-    date_created = models.DateTimeField()
+    creator = models.IntegerField(blank=True,default=1)
+    date_created = models.DateTimeField(blank=True,default='2016-07-07 08:14:50')
     concept_name_id = models.IntegerField(unique=True, primary_key=True)
-    voided = models.BooleanField()
-    voided_by = models.IntegerField(blank=True, null=True)
+    voided = models.BooleanField(blank=True,default=0)
+    voided_by = models.IntegerField(blank=True, default=1)
     date_voided = models.DateTimeField(blank=True, null=True)
-    void_reason = models.CharField(max_length=255, blank=True)
+    void_reason = models.CharField(max_length=255, blank=True,null=True)
     uuid = models.CharField(unique=True, max_length=38)
     concept_name_type = models.CharField(max_length=50, blank=True)
 #    locale_preferred = models.IntegerField(blank=True, null=True)
-    locale_preferred = models.BooleanField()
+    locale_preferred = models.BooleanField(blank=True)
 
     def __unicode__(self):
         return self.name
@@ -213,7 +216,7 @@ class ConceptNumeric(models.Model):
     low_normal = models.FloatField(blank=True, null=True)
     units = models.CharField(max_length=50, blank=True)
     precise = models.IntegerField()
-    display_precision = models.IntegerField()
+    display_precision = models.IntegerField(blank=True, null=True)
     class Meta:
         managed = False
         db_table = 'concept_numeric'
@@ -250,8 +253,8 @@ class ConceptProposalTagMap(models.Model):
 
 class ConceptReferenceMap(models.Model):
     concept_map_id = models.IntegerField(primary_key=True)
-    creator = models.IntegerField()
-    date_created = models.DateTimeField()
+    creator = models.IntegerField(blank=True,default=1)
+    date_created = models.DateTimeField(blank=True,default='2010-04-25 11:29:41')
 #    concept_id = models.IntegerField()
     concept = models.ForeignKey('Concept')
     uuid = models.CharField(unique=True, max_length=38)
@@ -261,7 +264,7 @@ class ConceptReferenceMap(models.Model):
     map_type = models.ForeignKey(
         'ConceptMapType',
         db_column='concept_map_type_id')
-    changed_by = models.IntegerField(blank=True, null=True)
+    changed_by = models.IntegerField(blank=True, null=True,default=1)
     date_changed = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -273,15 +276,18 @@ class ConceptReferenceSource(models.Model):
     concept_source_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50)
     description = models.TextField()
-    hl7_code = models.CharField(unique=True, max_length=50, blank=True)
+    hl7_code = models.CharField(unique=True, max_length=50, blank=True,null=True)
     creator = models.IntegerField()
-    date_created = models.DateTimeField()
+    date_created = models.DateTimeField(blank=True,default='2014-09-18 14:17:36')
     retired = models.IntegerField()
     retired_by = models.IntegerField(blank=True, null=True)
     date_retired = models.DateTimeField(blank=True, null=True)
-    retire_reason = models.CharField(max_length=255, blank=True)
-    uuid = models.CharField(unique=True, max_length=38)
-
+    retire_reason = models.CharField(max_length=255,	blank=True,null=True)
+    uuid = models.CharField(max_length=38)
+	#Below three columns not in refapp
+    date_changed = models.DateTimeField(blank=True,null=True)
+    changed_by = models.IntegerField(blank=True, null=True)
+    unique_id = models.CharField(unique=True,max_length=250,blank=True,null=True)
     class Meta:
         managed = False
         db_table = 'concept_reference_source'
@@ -294,18 +300,18 @@ class ConceptReferenceTerm(models.Model):
     concept_reference_term_id = models.IntegerField(primary_key=True)
 #    concept_source_id = models.IntegerField()
     concept_source = models.ForeignKey('ConceptReferenceSource')
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True,null=True)
     code = models.CharField(max_length=255)
-    version = models.CharField(max_length=255, blank=True)
-    description = models.CharField(max_length=255, blank=True)
-    creator = models.IntegerField()
-    date_created = models.DateTimeField()
+    version = models.CharField(max_length=255, blank=True,null=True)
+    description = models.CharField(max_length=255, blank=True,null=True)
+    creator = models.IntegerField(blank=True,default=1)
+    date_created = models.DateTimeField(blank=True,default='2014-07-15 00:00:00')
     date_changed = models.DateTimeField(blank=True, null=True)
-    changed_by = models.IntegerField(blank=True, null=True)
+    changed_by = models.IntegerField(blank=True, null=True,default=1)
     retired = models.IntegerField()
-    retired_by = models.IntegerField(blank=True, null=True)
+    retired_by = models.IntegerField(blank=True, null=True,default=1)
     date_retired = models.DateTimeField(blank=True, null=True)
-    retire_reason = models.CharField(max_length=255, blank=True)
+    retire_reason = models.CharField(max_length=255, blank=True,null=True)
     uuid = models.CharField(unique=True, max_length=38)
 
     class Meta:
@@ -339,8 +345,8 @@ class ConceptSet(models.Model):
     concept = models.ForeignKey('Concept', db_column='concept_id', related_name='concept_set_parent')
     concept_set_owner = models.ForeignKey('Concept', db_column='concept_set')
     sort_weight = models.FloatField(blank=True, null=True)
-    creator = models.IntegerField()
-    date_created = models.DateTimeField()
+    creator = models.IntegerField(blank=True,default=1)
+    date_created = models.DateTimeField(blank=True,default='2011-06-12 22:59:22')
     uuid = models.CharField(unique=True, max_length=38)
     class Meta:
         managed = False
@@ -384,4 +390,3 @@ class ConceptWord(models.Model):
     class Meta:
         managed = False
         db_table = 'concept_word'
-
